@@ -1,6 +1,0 @@
-const UserAuth = require("../models/userAuthModel")
-
-module.exports = {
-    // Register User
-    
-}

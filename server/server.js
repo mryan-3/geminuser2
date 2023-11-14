@@ -1,21 +1,21 @@
-const express = require("express")
-const mongoose = require("mongoose")
-const bcrypt = require("bcrypt")
-const jwt = require("jsonwebtoken")
+const express = require('express')
 const app = express()
-const passport = require("passport")
-const passportSetup = require("./config/passport")
+const connectDb = require("./config/database")
+const userAuthRoute = require('./routes/userAuth')
+const protectedRoutes = require('./routes/protected')
+const { verifyToken } = require('../middleware/authMiddleware')
 
 app.use(express.json())
-app.use(passport.initialize())
-app.use(passport.session())
+app.use("/api/v1/", userAuthRoute)
+app.use("/api/v1/protected", verifyToken, protectedRoutes)
 
-// Routes: 1. Registration 
-app.post("/register", (req, res) => {
-    const { username, password }= req.body
-})
 
-//2. User Login
-app.post("/login", (req, res) => {
-    const { username, password } = req.body
-})
+const port = 3000
+connectDb()
+    .then(() => {
+        console.log("sucessful connection")
+        app.listen(port, () => {
+            console.log(`Server running on port ${port}`)
+        })
+    })
+    .catch(err => console.log(err))
